@@ -54,7 +54,7 @@ class OptionParser < UI::CLI::OptionParser
 
         @report_path = File.expand_path( @report_path )
 
-        if !File.exists?( @report_path )
+        if !File.exist?( @report_path )
             print_error "Report does not exist: #{@report_path}"
             exit 1
         end
@@ -71,8 +71,15 @@ class OptionParser < UI::CLI::OptionParser
             @issues = @report.issues.
                 select { |i| @issue_digests.include? i.digest.to_s }
 
+            found_digests   = @issues.map { |i| i.digest.to_s }
+            missing_digests = @issue_digests - found_digests
+
+            if missing_digests.any?
+                print_error 'Could not find issues for the following digests: ' <<
+                                missing_digests.join(' ')
+            end
+
             if @issues.empty?
-                print_error "Could not find any issues for digests: #{@issue_digests.join(' ')}"
                 exit 1
             end
 
