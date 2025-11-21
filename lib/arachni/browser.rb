@@ -1101,19 +1101,12 @@ class Browser
     def selenium
         return @selenium if @selenium
 
-        # For some weird reason the Typhoeus client is very slow for
-        # PhantomJS 2.1.1 and causes a boatload of time-outs.
-        client = Selenium::WebDriver::Remote::Http::Default.new
-        client.timeout = Options.browser_cluster.job_timeout
+        # Start the proxy before the browser so we have the port
+        start_proxy
 
         @selenium = Selenium::WebDriver.for(
-            :remote,
-
-            # We need to spawn our own PhantomJS process because Selenium's
-            # way sometimes gives us zombies.
-            url:                  spawn_browser,
-            desired_capabilities: capabilities,
-            http_client:          client
+            :chrome,
+            options: chrome_options
         )
     end
 
@@ -1334,8 +1327,9 @@ class Browser
 
     def start_webdriver
         print_debug_level_2 'Starting WebDriver...'
+        # Watir initialization with existing selenium driver
         @watir = ::Watir::Browser.new( selenium )
-        print_debug_level_2 "... started WebDriver at: #{@browser_url}"
+        print_debug_level_2 "... started WebDriver."
 
         print_debug '...boot-up completed.'
     end
@@ -1488,28 +1482,23 @@ EOJS
     #     [ :chrome, switches: [ "--proxy-server=#{@proxy.address}" ] ]
     # end
 
-    def capabilities
-        Selenium::WebDriver::Remote::Capabilities.phantomjs(
-            # Selenium tries to be helpful by including screenshots for errors
-            # in the JSON response. That's not gonna fly in this use case as
-            # parsing lots of massive JSON responses at the same time will
-            # have a significant impact on performance.
-            takes_screenshot: false,
+    def chrome_options
+        options = Selenium::WebDriver::Chrome::Options.new
+        options.add_argument '--headless=new'
+        options.add_argument '--disable-gpu'
+        options.add_argument '--no-sandbox'
+        options.add_argument '--ignore-certificate-errors'
+        options.add_argument "--user-agent=#{USER_AGENT}"
+        
+        if @proxy
+            options.add_argument "--proxy-server=#{@proxy.url}"
+        end
 
-            # Needs to include the string Webkit:
-            #   https://github.com/ariya/phantomjs/issues/14198
-            #
-            # Default is:
-            #   Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1
-            'phantomjs.page.settings.userAgent'                   =>
-                USER_AGENT,
-            'phantomjs.page.customHeaders.X-Arachni-Browser-Auth' =>
-                auth_token,
-            'phantomjs.page.settings.resourceTimeout'             =>
-                Options.http.request_timeout,
-            'phantomjs.page.settings.loadImages'                  =>
-                !Options.browser_cluster.ignore_images
-        )
+        # Custom headers are not directly supported in Chrome Options like in PhantomJS
+        # We might need a different approach for 'X-Arachni-Browser-Auth' if strictly needed,
+        # but for now we focus on getting the browser running.
+        
+        options
     end
 
     def flush_request_transitions
@@ -1872,7 +1861,7 @@ EOJS
     end
 
     def normalize_watir_url( url )
-        normalize_url( ::URI.encode( url, ';' ) ).gsub( '%3B', '%253B' )
+        normalize_url( Addressable::URI.encode( url, ';' ) ).gsub( '%3B', '%253B' )
     end
 
 end

@@ -69,7 +69,7 @@ class Header < Base
                 if !ENCODE_CHARACTERS.find { |c| str.include? c }
                     str
                 else
-                    ::URI.encode( str, ENCODE_CHARACTERS_LIST )
+                    Addressable::URI.encode( str, ENCODE_CHARACTERS_LIST )
                 end
             end
         end

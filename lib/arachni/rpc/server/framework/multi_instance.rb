@@ -42,7 +42,7 @@ module MultiInstance
     #
     # @return   [Array<String>]
     def errors( starting_line = 0, &block )
-        return [] if !File.exists? error_logfile
+        return [] if !File.exist? error_logfile
 
         error_strings = error_buffer.dup
 

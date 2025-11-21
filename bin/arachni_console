@@ -27,7 +27,7 @@ MAXHISTSIZE = 300
 
 begin
     histfile = File.expand_path( HISTFILE )
-    if File.exists?( histfile )
+    if File.exist?( histfile )
         lines = IO.readlines( histfile ).map { |line| line.chomp }
         Readline::HISTORY.push( *lines )
     end

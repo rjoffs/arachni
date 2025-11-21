@@ -70,7 +70,7 @@ class OptionParser < UI::CLI::OptionParser
 
         @report_path = File.expand_path( @report_path )
 
-        if !File.exists?( @report_path )
+        if !File.exist?( @report_path )
             print_error "Report does not exist: #{@report_path}"
             exit 1
         end

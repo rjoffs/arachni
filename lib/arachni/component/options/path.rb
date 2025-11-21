@@ -13,7 +13,7 @@ class Arachni::Component::Options::Path < Arachni::Component::Options::Base
 
     def valid?
         return false if !super
-        File.exists?( effective_value )
+        File.exist?( effective_value )
     end
 
     def type

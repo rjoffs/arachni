@@ -10,7 +10,7 @@
 Gem::Specification.new do |s|
     require File.expand_path( File.dirname( __FILE__ ) ) + '/lib/arachni/version'
 
-    s.required_ruby_version = '>= 2.2.0'
+    s.required_ruby_version = '>= 3.0.0'
 
     s.name              = 'arachni'
     s.version           = Arachni::VERSION
@@ -47,10 +47,10 @@ Gem::Specification.new do |s|
 
     # Don't specify version, messes with the packages since they always grab the
     # latest one.
-    s.add_dependency 'bundler'
 
-    s.add_dependency 'concurrent-ruby',     '1.0.2'
-    s.add_dependency 'concurrent-ruby-ext', '1.0.2'
+
+    s.add_dependency 'concurrent-ruby',     '~> 1.1'
+    s.add_dependency 'concurrent-ruby-ext', '~> 1.1'
 
     # For compressing/decompressing system state archives.
     s.add_dependency 'rubyzip',             '1.2.1'
@@ -61,58 +61,58 @@ Gem::Specification.new do |s|
     # HTML report
     s.add_dependency 'coderay',             '1.1.0'
 
-    s.add_dependency 'childprocess',        '0.5.3'
+    s.add_dependency 'childprocess',        '~> 4.1'
 
     # RPC serialization.
-    s.add_dependency 'msgpack',             '0.7.0'
+    s.add_dependency 'msgpack',             '~> 1.7'
 
     if RUBY_PLATFORM != 'java'
         # Optimized JSON.
-        s.add_dependency 'oj',              '2.15.0'
-        s.add_dependency 'oj_mimic_json',   '1.0.1'
+        s.add_dependency 'oj',              '~> 3.16'
+        s.add_dependency 'oj_mimic_json',   '~> 1.0'
     end
 
     # Web server
-    s.add_dependency 'puma',                '2.14.0'
+    s.add_dependency 'puma',                '~> 6.4'
 
     # REST API
-    s.add_dependency 'sinatra',             '1.4.6'
-    s.add_dependency 'sinatra-contrib',     '1.4.6'
+    s.add_dependency 'sinatra',             '~> 3.1'
+    s.add_dependency 'sinatra-contrib',     '~> 3.1'
 
     # RPC client/server implementation.
     s.add_dependency 'arachni-rpc',         '~> 0.2.1.4'
 
     # HTTP client.
-    s.add_dependency 'typhoeus',            '1.0.2'
+    s.add_dependency 'typhoeus',            '~> 1.4'
 
     # Fallback URI parsing and encoding utilities.
-    s.add_dependency 'addressable',         '2.3.6'
+    s.add_dependency 'addressable',         '~> 2.8'
 
     # E-mail plugin.
-    s.add_dependency 'pony',                '1.11'
+    s.add_dependency 'pony',                '~> 1.13'
 
     # For the Arachni console (arachni_console).
-    s.add_dependency 'rb-readline',         '0.5.1'
+    s.add_dependency 'rb-readline',         '~> 0.5'
 
     # Markup parsing, for reports and Element::XML.
-    s.add_dependency 'nokogiri',            '1.6.8.1'
+    s.add_dependency 'nokogiri',            '~> 1.15'
     # Really fast and lightweight markup parsing, for pages.
-    s.add_dependency 'ox',                  '2.4.11'
+    s.add_dependency 'ox',                  '~> 2.14'
 
     # Outputting data in table format (arachni_rpcd_monitor).
-    s.add_dependency 'terminal-table',      '1.4.5'
+    s.add_dependency 'terminal-table',      '~> 3.0'
 
     # Browser support for DOM/JS/AJAX analysis stuff.
     # Lock webdriver, newer versions has issues.
-    s.add_dependency 'selenium-webdriver',  '3.0.1'
-    s.add_dependency 'watir-webdriver',     '0.8.0'
+    s.add_dependency 'selenium-webdriver',  '~> 4.15'
+    s.add_dependency 'watir',               '~> 7.0'
 
     # Markdown to HTML conversion, used by the HTML report for component
     # descriptions.
-    s.add_dependency 'kramdown',            '1.4.1'
+    s.add_dependency 'kramdown',            '~> 2.4'
 
     # Used to scrub Markdown for XSS etc.
-    s.add_dependency 'loofah',              '2.0.3'
+    s.add_dependency 'loofah',              '~> 2.21'
 
     s.post_install_message = <<MSG
 

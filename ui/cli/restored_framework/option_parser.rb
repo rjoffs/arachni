@@ -102,19 +102,6 @@ class OptionParser < UI::CLI::OptionParser
 
     def validate_snapshot_path
         if !@snapshot_path
-            print_error 'No snapshot file provided.'
-            exit 1
-        end
-
-        @snapshot_path = File.expand_path( @snapshot_path )
-
-        if !File.exists?( @snapshot_path )
-            print_error "Snapshot does not exist: #{@snapshot_path}"
-            exit 1
-        end
-
-        begin
-            Snapshot.read_metadata @snapshot_path
         rescue Snapshot::Error::InvalidFile => e
             print_error e.to_s
             exit 1

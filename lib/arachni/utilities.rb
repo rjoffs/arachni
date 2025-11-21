@@ -131,7 +131,7 @@ module Utilities
 
     # @see URI.encode
     def uri_encode( *args )
-        URI.encode( *args )
+        Addressable::URI.encode( *args )
     end
 
     # @see URI.encode
